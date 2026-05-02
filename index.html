@@ -1947,23 +1947,21 @@ function saveData(key, val) {
 // ─── DEFAULT PRICES (always merge to handle old/missing localStorage fields) ───
 const DEFAULT_PRICES = {
   peakTime: '18:00',
-  regWeekdayBefore:120, regWeekdayAfter:140,
+  regWeekdayBefore:130, regWeekdayAfter:170,
   regWeekendBefore:150, regWeekendAfter:170,
-  grpWeekdayBefore:100, grpWeekdayAfter:120,
-  grpWeekendBefore:130, grpWeekendAfter:150,
+  grpWeekdayBefore:120, grpWeekdayAfter:140,
+  grpWeekendBefore:120, grpWeekendAfter:140,
   cancelFee:50, cancelCutoff:'14:00'
 };
 
 let settings = loadData('bp_settings', {
-  venueName: 'BadmintonPro Court', address: '123 ถ.เพชรบุรี กรุงเทพฯ', tel: '02-123-4567',
+  venueName: 'S19 Badminton Club', address: '3/7 ซอยมิตรภาพ19 ต.ในเมือง อ.เมืองนครราชสีมา จ.นครราชสีมา 30000', tel: '096-416-5054',
   openTime: '07:00', closeTime: '23:00',
   weekdays: [1,2,3,4,5,6,0],
   slotMin: 1, slotUnit: 30, roundUp: 15,
   prices: DEFAULT_PRICES,
   holidays: [
-    { date:'2025-04-13', name:'วันสงกรานต์', type:'นักขัตฤกษ์' },
-    { date:'2025-04-14', name:'วันสงกรานต์', type:'นักขัตฤกษ์' },
-    { date:'2025-05-01', name:'วันแรงงาน', type:'นักขัตฤกษ์' },
+       { date:'2025-05-01', name:'วันแรงงาน', type:'นักขัตฤกษ์' },
   ]
 });
 // Always merge default prices to patch missing fields from old localStorage versions
@@ -1981,39 +1979,16 @@ let courts = loadData('bp_courts', [
   { id:9, name:'สนาม 9', start:'07:00', end:'23:00', active:true },
 ]);
 
-let members = loadData('bp_members', [
-  { id:1, name:'สมชาย ใจดี', phone:'081-234-5678', type:'regular', hours:24, regDay:'จันทร์', regTime:'18:00', regAutoCalc:true, active:true },
-  { id:2, name:'ก๊วนแบดมินตัน ABC', phone:'089-876-5432', type:'group', hours:120, regDay:'เสาร์', regTime:'07:00', regAutoCalc:true, active:true },
-  { id:3, name:'วิชัย สมาร์ท', phone:'062-111-2222', type:'regular', hours:8, regDay:'', regTime:'', regAutoCalc:false, active:true },
-  { id:4, name:'ก๊วนบ้านรัก', phone:'085-999-0000', type:'group', hours:200, regDay:'อาทิตย์', regTime:'06:00', regAutoCalc:true, active:true },
-  { id:5, name:'นภา รักกีฬา', phone:'091-333-4444', type:'regular', hours:36, regDay:'พุธ', regTime:'19:00', regAutoCalc:true, active:true },
-  { id:6, name:'ก๊วนเพื่อนซี้', phone:'086-555-7777', type:'group', hours:88, regDay:'ศุกร์', regTime:'08:00', regAutoCalc:true, active:true },
-  { id:7, name:'ธนา ชอบแบด', phone:'092-888-1234', type:'regular', hours:15, regDay:'', regTime:'', regAutoCalc:false, active:true },
-  { id:8, name:'มนัส เร็วแรง', phone:'083-222-9999', type:'regular', hours:62, regDay:'อังคาร', regTime:'17:00', regAutoCalc:true, active:true },
-]);
+let members = loadData('bp_members', []);
 
 const today = new Date();
 const todayStr = today.toISOString().slice(0,10);
 const yday = new Date(today); yday.setDate(yday.getDate()-1);
 const ydayStr = yday.toISOString().slice(0,10);
 
-let bookings = loadData('bp_bookings', [
-  { id:'BK001', memberId:1, name:'สมชาย ใจดี', phone:'081-234-5678', courtId:1, date:todayStr, checkIn:'08:00', checkOut:'10:00', hours:2, type:'regular', amount:240, status:'completed', note:'' },
-  { id:'BK002', memberId:2, name:'ก๊วนแบดมินตัน ABC', phone:'089-876-5432', courtId:2, date:todayStr, checkIn:'07:00', checkOut:'09:00', hours:2, type:'group', amount:200, status:'checked_in', note:'' },
-  { id:'BK003', memberId:0, name:'นายทดสอบ', phone:'080-000-0001', courtId:3, date:todayStr, checkIn:'10:00', checkOut:'12:00', hours:2, type:'regular', amount:240, status:'confirmed', note:'' },
-  { id:'BK004', memberId:3, name:'วิชัย สมาร์ท', phone:'062-111-2222', courtId:4, date:todayStr, checkIn:'13:00', checkOut:'15:00', hours:2, type:'regular', amount:240, status:'confirmed', note:'' },
-  { id:'BK005', memberId:0, name:'ลูกค้าทั่วไป', phone:'090-555-0000', courtId:1, date:ydayStr, checkIn:'09:00', checkOut:'11:00', hours:2, type:'regular', amount:240, status:'completed', note:'' },
-  { id:'BK006', memberId:4, name:'ก๊วนบ้านรัก', phone:'085-999-0000', courtId:2, date:ydayStr, checkIn:'06:00', checkOut:'09:00', hours:3, type:'group', amount:300, status:'completed', note:'' },
-]);
+let bookings = loadData('bp_bookings', []);
 
-let presets = loadData('bp_presets', [
-  { id:'PS001', memberId:2, name:'ก๊วนแบดมินตัน ABC', phone:'089-876-5432', dow:6, start:'07:00', end:'09:00',
-    courtIds:[1,2], courtSchedules:[{courtId:1,start:'07:00',end:'09:00'},{courtId:2,start:'07:00',end:'09:00'}],
-    color:'#8b5cf6', note:'ก๊วนเช้าเสาร์', active:true },
-  { id:'PS002', memberId:4, name:'ก๊วนบ้านรัก', phone:'085-999-0000', dow:0, start:'06:00', end:'09:00',
-    courtIds:[3,4], courtSchedules:[{courtId:3,start:'06:00',end:'09:00'},{courtId:4,start:'06:00',end:'09:00'}],
-    color:'#3b82f6', note:'ก๊วนเช้าอาทิตย์', active:true },
-]);
+let presets = loadData('bp_presets', []);
 
 let coaches = loadData('bp_coaches', []);
 
